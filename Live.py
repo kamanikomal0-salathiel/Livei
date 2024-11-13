@@ -1,72 +1,62 @@
 import subprocess
 import os
-import time
 
 # YouTube Stream Key and Main RTMP URL
 YOUTUBE_STREAM_KEY = "aw3v-q7qm-tcs5-m57b-4tf7"
 YOUTUBE_RTMP_URL = f"rtmp://a.rtmp.youtube.com/live2/{YOUTUBE_STREAM_KEY}"
+
+# Backup RTMP URL
 YOUTUBE_BACKUP_RTMP_URL = "rtmp://b.rtmp.youtube.com/live2?backup=1"
 
-# File with video URLs
-video_links_file = "video_links.txt"
+# Video URL to download
+VIDEO_URL = "https://www.tikwm.com/video/media/hdplay/6996701671296404742.mp4"
+VIDEO_FILE = "A.mp4"
 
-# Check if the video links file exists
-if not os.path.exists(video_links_file):
-    print(f"Error: {video_links_file} not found. Please create it and add video URLs.")
-    exit(1)
+def download_video():
+    """Download the video using wget."""
+    if os.path.exists(VIDEO_FILE):
+        print(f"{VIDEO_FILE} already exists. Skipping download.")
+    else:
+        print(f"Downloading video from {VIDEO_URL}...")
+        subprocess.run(["wget", "-O", VIDEO_FILE, VIDEO_URL], check=True)
+        print(f"Video downloaded as {VIDEO_FILE}.")
 
-# Infinite loop for continuous streaming
-while True:
-    with open(video_links_file, "r") as file:
-        video_links = file.readlines()
+def stream_video():
+    """Stream the video using FFmpeg."""
+    ffmpeg_command = [
+        "ffmpeg",
+        "-re",  # Real-time streaming
+        "-stream_loop", "-1",  # Loop the video indefinitely
+        "-i", VIDEO_FILE,  # Input video file
+        "-vf", "scale=720:1280",  # Resize to 9:16 aspect ratio (720x1280 for Shorts)
+        "-c:v", "libx264",
+        "-preset", "veryfast",
+        "-b:v", "3000k",
+        "-maxrate", "3000k",
+        "-bufsize", "6000k",
+        "-pix_fmt", "yuv420p",
+        "-g", "50",
+        "-c:a", "aac",
+        "-b:a", "160k",
+        "-ar", "44100",
+        "-f", "flv",  # RTMP requires FLV format
+        YOUTUBE_RTMP_URL
+    ]
 
-    for video_url in video_links:
-        video_url = video_url.strip()
-        if not video_url:
-            continue
+    try:
+        print("Starting stream on main RTMP URL...")
+        subprocess.run(ffmpeg_command, check=True)
+    except subprocess.CalledProcessError:
+        print("Main RTMP URL failed, switching to backup URL...")
+        ffmpeg_command[-1] = YOUTUBE_BACKUP_RTMP_URL
+        subprocess.run(ffmpeg_command)
 
-        # Step 1: Download the video
-        video_file = "A.mp4"
-        print(f"Downloading video from {video_url}...")
-        try:
-            subprocess.run(["wget", "-O", video_file, video_url], check=True)
-        except subprocess.CalledProcessError:
-            print(f"Error downloading video from {video_url}. Skipping...")
-            continue
+def main():
+    """Main function to download and stream the video."""
+    while True:
+        download_video()
+        stream_video()
+        print("Streaming completed. Restarting...")
 
-        # Step 2: Stream the video using FFmpeg
-        ffmpeg_command = [
-            "ffmpeg",
-            "-re",  # Real-time streaming
-            "-i", video_file,  # Input video file
-            "-vf", "scale=720:1280",  # Resize to 9:16 aspect ratio (720x1280)
-            "-c:v", "libx264",
-            "-preset", "veryfast",
-            "-b:v", "3000k",
-            "-maxrate", "3000k",
-            "-bufsize", "6000k",
-            "-pix_fmt", "yuv420p",
-            "-g", "50",
-            "-c:a", "aac",
-            "-b:a", "160k",
-            "-ar", "44100",
-            "-f", "flv",  # RTMP requires FLV format
-            YOUTUBE_RTMP_URL
-        ]
-
-        try:
-            print(f"Starting live stream for {video_file}...")
-            subprocess.run(ffmpeg_command, check=True)
-        except subprocess.CalledProcessError:
-            print("Error during streaming. Retrying with backup URL...")
-            ffmpeg_command[-1] = YOUTUBE_BACKUP_RTMP_URL
-            subprocess.run(ffmpeg_command)
-
-        # Step 3: Clean up the downloaded video
-        if os.path.exists(video_file):
-            os.remove(video_file)
-            print(f"Cleaned up {video_file}.")
-
-    # Optional: Wait before restarting the loop
-    print("Waiting for 10 seconds before restarting...")
-    time.sleep(10)
+if __name__ == "__main__":
+    main()
