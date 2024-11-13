@@ -1,0 +1,32 @@
+name: Stream Video to YouTube
+
+on:
+  workflow_dispatch:  # Manually trigger the workflow
+  push:  # Trigger workflow on push to main branch
+    branches:
+      - main
+
+jobs:
+  stream-video:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    # Step 3: Install dependencies (if any)
+    - name: Install Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y wget ffmpeg
+
+    # Step 4: Run the Python script
+    - name: Run Streaming Script
+      run: python3 streaming_script.py
