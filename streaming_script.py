@@ -9,7 +9,7 @@ YOUTUBE_RTMP_URL = f"rtmp://a.rtmp.youtube.com/live2/{YOUTUBE_STREAM_KEY}"
 YOUTUBE_BACKUP_RTMP_URL = "rtmp://b.rtmp.youtube.com/live2?backup=1"
 
 # Video URL to download
-VIDEO_URL = "https://www.tikwm.com/video/media/hdplay/7432007546031869216.mp4"
+VIDEO_URL = "https://www.tikwm.com/video/media/hdplay/7418068913059269894.mp4"
 VIDEO_FILE = "A.mp4"
 
 def download_video():
