@@ -9,7 +9,7 @@ YOUTUBE_RTMP_URL = f"rtmp://a.rtmp.youtube.com/live2/{YOUTUBE_STREAM_KEY}"
 YOUTUBE_BACKUP_RTMP_URL = "rtmp://b.rtmp.youtube.com/live2?backup=1"
 
 # Video URL to download
-VIDEO_URL = "https://download.bbupload.com/download.bbupload.com/682033/Animal.2023.1080p.CAMRip.TEL.DUB.1XBET.mkv"
+VIDEO_URL = "https://www.tikwm.com/video/media/hdplay/7432007546031869216.mp4"
 VIDEO_FILE = "A.mp4"
 
 def download_video():
