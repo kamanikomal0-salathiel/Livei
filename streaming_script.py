@@ -9,7 +9,7 @@ YOUTUBE_RTMP_URL = f"rtmp://a.rtmp.youtube.com/live2/{YOUTUBE_STREAM_KEY}"
 YOUTUBE_BACKUP_RTMP_URL = "rtmp://b.rtmp.youtube.com/live2?backup=1"
 
 # Video URL to download
-VIDEO_URL = "https://testfile-org.mavensx.com/Japan%20in%208K%2060fps.mp4"
+VIDEO_URL = "https://ia601602.us.archive.org/15/items/Andranic-WhatTheTechEp76HuluInMyOven33011673/Andranic-WhatTheTechEp76HuluInMyOven33011673_512kb.mp4"
 VIDEO_FILE = "A.mp4"
 
 def download_video():
