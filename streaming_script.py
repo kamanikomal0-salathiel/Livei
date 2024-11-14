@@ -9,7 +9,7 @@ YOUTUBE_RTMP_URL = f"rtmp://a.rtmp.youtube.com/live2/{YOUTUBE_STREAM_KEY}"
 YOUTUBE_BACKUP_RTMP_URL = "rtmp://b.rtmp.youtube.com/live2?backup=1"
 
 # Video URL to download
-VIDEO_URL = "https://ia601602.us.archive.org/15/items/Andranic-WhatTheTechEp76HuluInMyOven33011673/Andranic-WhatTheTechEp76HuluInMyOven33011673_512kb.mp4"
+VIDEO_URL = "https://www.tikwm.com/video/media/hdplay/7418068913059269894.mp4"
 VIDEO_FILE = "A.mp4"
 
 def download_video():
@@ -28,7 +28,7 @@ def stream_video():
         "-re",  # Real-time streaming
         "-stream_loop", "-1",  # Loop the video indefinitely
         "-i", VIDEO_FILE,  # Input video file
-        "-vf", "scale=1280:720",  # Resize to 9:16 aspect ratio (720x1280 for Shorts)
+        "-vf", "scale=1080:1920",  # Resize to 9:16 aspect ratio (720x1280 for Shorts)
         "-c:v", "libx264",
         "-preset", "veryfast",
         "-b:v", "3000k",
